@@ -1,4 +1,4 @@
 ArduiLog-V0.1
 =============
 
-Arduino datalog
+Arduino based data log
