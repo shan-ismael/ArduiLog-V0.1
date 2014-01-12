@@ -1,25 +1,28 @@
 /* 
  ArduiLog v.01 http://rc-lab.fr
- MegunoLink users code - with english comments
  
- Short link : http://wp.me/p2z2tt-7u
+ License: http://creativecommons.org/licenses/by-nc/4.0/
+ 
+ Code source pour les utilisateurs de Megunlink - avec les commentaires en francais
+ 
+ Tutorial{ Lien court: http://wp.me/p2z2tt-7u
  http://rc-lab.fr/arduilog-v-01-appareil-dacquisition-48-voies-analogiques
  
- Shanmugathas Vigneswara-Ismaël.
- 
+ code écrit par Shanmugathas Vigneswaran-Ismaël.
  */
+
+
+/*
+ Merci à Mayhew Labs : http://mayhewlabs.com/arduino-mux-shield
+ pour le code concernant le multiplexer.
  
- 
- /*
- Thanks to MuxShield : http://mayhewlabs.com/arduino-mux-shield
- for multiplexer code.
- 
- Thanks to Maurice Ribble 4-17-2008
+ Merci à Maurice Ribble
  http://www.glacialwanderer.com/hobbyrobotics
- for DS1307 RTC code.
+ pour le code du module temps réel DS1307.
  
- Thanks to Edouard Chalouhb : http://www.edouard-chalhoub.com/
- to provide me a lab to test ArduiLog v0.1
+ Merci à mon ami Edouard Chalouhb : http://www.edouard-chalhoub.com/
+ pour m'avoir fourni un laboratoire, afin de tester l'appareil 
+ dans une application concrète.
  */
 
 
@@ -28,55 +31,54 @@
 #include <SoftwareSerial.h>
 #include <math.h>
 
-// Use software serial to prind on LCD display
+// Utilise la libraire SoftwareSerial pour l'affichage de l'écran LCD
 SerialLCD slcd(11,12);
 
-// Define real time clock adresse
+// Définition de l'adresse du module temps réel
 #define DS1307_I2C_ADDRESS 0x68
 
-//Define mutliplexer digital control pins
+// Définition des connecteurs digitaux controlants le multiplexeur
 #define CONTROL0 5    
 #define CONTROL1 4
 #define CONTROL2 3
 #define CONTROL3 2
 
-int analog_input[48]; // Raw analog input of multiplexer
-int an_disp_count = 0; // Integer used to count LCD display
-char* input_unit[48]; // Your analog input unit configuration
-char* input_label[48]; // Your analog input label/comment
-float analog_mapped[48]; // Use equations to convert raw analog input to physical value
+int analog_input[48];  // valeurs entrées analogiques (0 à 1023)
+int an_disp_count = 0; // integer, compteur pour affichage des valeurs sur l'écran LCD
+char* input_unit[48]; // unité de vos entrées analogiques pour MegunoLink et l'écran LCD
+char* input_label[48]; // commentaires de vos entrées analogiques pour MegunoLink
 
-// Store time and date value from RTC module
+// Uniquement les valeurs ci-dessous sont envoyées vers MegunoLink et l'écran LCD
+float analog_mapped[48]; // Utilisez vos équations transformer les valeurs analogiques en valeurs physiques
+
+
+// Sauvegarde la valeur de la date et du temps à partir module temps réel
 byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
 
 
 void setup()
 {
-  //Open the serial port at 500000 bps
+  //Ouvreture du port série à 500000 bps
   Serial.begin(500000);
 
-  //Open Serial LCD
+  //Ouverture de la série LCD
   slcd.begin();
 
-  // lcd backlight on
+  //Allumage du rétro-éclairage
   slcd.backlight();
 
-  // Openr Wire communication for RTC
+  // Ouverture de la communication Wire pour le module RTC
   Wire.begin();
 
-  //Set MUX control pins to output
+  // Configuration des connecteurs en mode sortie
   pinMode(CONTROL0, OUTPUT);
   pinMode(CONTROL1, OUTPUT);
   pinMode(CONTROL2, OUTPUT);
   pinMode(CONTROL3, OUTPUT);
 
   /* 
-   Change these values to what you want to set your clock to.
-   You probably only want to set your clock once and then remove
-   the setDateDs1307 call.
-   */
-
-  /*
+   Utiliser les valeurs ci-dessous vous voulez configurer le module temps réel.
+   Une fois configuré, laisser cette partie du code en commentaire
    second = 40;
    minute = 54;
    hour = 14;
@@ -87,106 +89,115 @@ void setup()
    setDateDs1307(second, minute, hour, dayOfWeek, dayOfMonth, month, year);
    */
 
+  /* 
+   Configurer les unités (Pa,C,V,mA,A ....) des entrées analogiques, 
+   pour l'affichage de MegunoLink et de l'écran LCD
+   ATTENTION n'utilisez pas de caractères spéciaux (°, %, $ ù etc....)
+   */
+  input_unit[0]="";   //unité de analog1 
+  input_unit[1]="";   //unité de analog2 
+  input_unit[2]="";   //unité de analog3
+  input_unit[3]="";   //unité de analog4 
+  input_unit[4]="";   //unité de analog5 
+  input_unit[5]="";   //unité de analog6 
+  input_unit[6]="";   //unité de analog7 
+  input_unit[7]="";   //unité de analog8 
+  input_unit[8]="";   //unité de analog9 
+  input_unit[9]="";   //unité de analog10 
+  input_unit[10]="";   //unité de analog11    
+  input_unit[11]="";   //unité de analog12 
+  input_unit[12]="";   //unité de analog13 
+  input_unit[13]="";   //unité de analog14 
+  input_unit[14]="";   //unité de analog15 
+  input_unit[15]="";   //unité de analog16 
+  input_unit[16]="";   //unité de analog17 
+  input_unit[17]="";   //unité de analog18 
+  input_unit[18]="";   //unité de analog19 
+  input_unit[19]="";   //unité de analog20 
+  input_unit[20]="";   //unité de analog21 
+  input_unit[21]="";   //unité de analog22 
+  input_unit[22]="";   //unité de analog23 
+  input_unit[23]="";   //unité de analog24 
+  input_unit[24]="";   //unité de analog25 
+  input_unit[25]="";   //unité de analog26 
+  input_unit[26]="";   //unité de analog27 
+  input_unit[27]="";   //unité de analog28 
+  input_unit[28]="";   //unité de analog29 
+  input_unit[29]="";   //unité de analog30 
+  input_unit[30]="";   //unité de analog31 
+  input_unit[31]="";   //unité de analog32 
+  input_unit[32]="";   //unité de analog33 
+  input_unit[33]="";   //unité de analog34 
+  input_unit[34]="";   //unité de analog35 
+  input_unit[35]="";   //unité de analog36 
+  input_unit[36]="";   //unité de analog37 
+  input_unit[37]="";   //unité de analog38 
+  input_unit[38]="";   //unité de analog39 
+  input_unit[39]="";   //unité de analog40 
+  input_unit[40]="";   //unité de analog41 
+  input_unit[41]="";   //unité de analog42 
+  input_unit[42]="";   //unité de analog43 
+  input_unit[43]="";   //unité de analog44 
+  input_unit[44]="";   //unité de analog45 
+  input_unit[45]="";   //unité de analog46 
+  input_unit[46]="";   //unité de analog47 
+  input_unit[47]="";   //unité de analog48 
 
-  // Set analogs inputs units  Megunolink and LCD display (Pa,°C,V,mA,A ....)
-  input_unit[0]="";   // analog1 unit
-  input_unit[1]="";   // analog2 unit
-  input_unit[2]="";   // analog3 unit
-  input_unit[3]="";   // analog4 unit
-  input_unit[4]="";   // analog5 unit
-  input_unit[5]="";   // analog6 unit
-  input_unit[6]="";   // analog7 unit
-  input_unit[7]="";   // analog8 unit
-  input_unit[8]="";   // analog9 unit
-  input_unit[9]="";   // analog10 unit
-  input_unit[10]="";   // analog11 unit   
-  input_unit[11]="";   // analog12 unit
-  input_unit[12]="";   // analog13 unit
-  input_unit[13]="";   // analog14 unit
-  input_unit[14]="";   // analog15 unit
-  input_unit[15]="";   // analog16 unit
-  input_unit[16]="";   // analog17 unit
-  input_unit[17]="";   // analog18 unit
-  input_unit[18]="";   // analog19 unit
-  input_unit[19]="";   // analog20 unit
-  input_unit[20]="";   // analog21 unit
-  input_unit[21]="";   // analog22 unit
-  input_unit[22]="";   // analog23 unit
-  input_unit[23]="";   // analog24 unit
-  input_unit[24]="";   // analog25 unit
-  input_unit[25]="";   // analog26 unit
-  input_unit[26]="";   // analog27 unit
-  input_unit[27]="";   // analog28 unit
-  input_unit[28]="";   // analog29 unit
-  input_unit[29]="";   // analog30 unit
-  input_unit[30]="";   // analog31 unit
-  input_unit[31]="";   // analog32 unit
-  input_unit[32]="";   // analog33 unit
-  input_unit[33]="";   // analog34 unit
-  input_unit[34]="";   // analog35 unit
-  input_unit[35]="";   // analog36 unit
-  input_unit[36]="";   // analog37 unit
-  input_unit[37]="";   // analog38 unit
-  input_unit[38]="";   // analog39 unit
-  input_unit[39]="";   // analog40 unit
-  input_unit[40]="";   // analog41 unit
-  input_unit[41]="";   // analog42 unit
-  input_unit[42]="";   // analog43 unit
-  input_unit[43]="";   // analog44 unit
-  input_unit[44]="";   // analog45 unit
-  input_unit[45]="";   // analog46 unit
-  input_unit[46]="";   // analog47 unit
-  input_unit[47]="";   // analog48 unit
 
-  // Configure analogs labels for Megunolink (Cooling room 1, Motor 2, Testing something 8 ...)
-  input_label[0]="";   // analog1 label
-  input_label[1]="";   // analog2 label
-  input_label[2]="";   // analog3 label
-  input_label[3]="";   // analog4 label
-  input_label[4]="";   // analog5 label
-  input_label[5]="";   // analog6 label
-  input_label[6]="";   // analog7 label
-  input_label[7]="";   // analog8 label
-  input_label[8]="";   // analog9 label
-  input_label[9]="";   // analog10 label
-  input_label[10]="";   // analog11 label   
-  input_label[11]="";   // analog12 label
-  input_label[12]="";   // analog13 label
-  input_label[13]="";   // analog14 label
-  input_label[14]="";   // analog15 label
-  input_label[15]="";   // analog16 label
-  input_label[16]="";   // analog17 label
-  input_label[17]="";   // analog18 label
-  input_label[18]=" ";   // analog19 label
-  input_label[19]="";   // analog20 label
-  input_label[20]="";   // analog21 label
-  input_label[21]="";   // analog22 label
-  input_label[22]="";   // analog23 label
-  input_label[23]="";   // analog24 label
-  input_label[24]="";   // analog25 label
-  input_label[25]="";   // analog26 label
-  input_label[26]="";   // analog27 label
-  input_label[27]="";   // analog28 label
-  input_label[28]="";   // analog29 label
-  input_label[29]="";   // analog30 label
-  input_label[30]="";   // analog31 label
-  input_label[31]="";   // analog32 label
-  input_label[32]="";   // analog33 label
-  input_label[33]="";   // analog34 label
-  input_label[34]="";   // analog35 label
-  input_label[35]="";   // analog36 label
-  input_label[36]="";   // analog37 label
-  input_label[37]="";   // analog38 label
-  input_label[38]="";   // analog39 label
-  input_label[39]="";   // analog40 label
-  input_label[40]="";   // analog41 label
-  input_label[41]="";   // analog42 label
-  input_label[42]="";   // analog43 label
-  input_label[43]="";   // analog44 label
-  input_label[44]="";   // analog45 label
-  input_label[45]="";   // analog46 label
-  input_label[46]="";   // analog47 label
-  input_label[47]="";   // analog48 label
+
+  /*
+   Configurer les commentaires pour l'affichage sur MegunoLink
+   Exemple : T chambre 1, T chambre 2, P aspiration ...
+   ATTENTION n'utilisez pas de caractères spéciaux (°, %, $ ù etc....)
+   */
+  input_label[0]="";   // commentaire de analog1 
+  input_label[1]="";   // commentaire de analog2 
+  input_label[2]="";   // commentaire de analog3 
+  input_label[3]="";   // commentaire de analog4 
+  input_label[4]="";   // commentaire de analog5 
+  input_label[5]="";   // commentaire de analog6 
+  input_label[6]="";   // commentaire de analog7 
+  input_label[7]="";   // commentaire de analog8 
+  input_label[8]="";   // commentaire de analog9 
+  input_label[9]="";   // commentaire de analog10 
+  input_label[10]="";   // commentaire de analog11    
+  input_label[11]="";   // commentaire de analog12 
+  input_label[12]="";   // commentaire de analog13 
+  input_label[13]="";   // commentaire de analog14 
+  input_label[14]="";   // commentaire de analog15 
+  input_label[15]="";   // commentaire de analog16 
+  input_label[16]="";   // commentaire de analog17 
+  input_label[17]="";   // commentaire de analog18 
+  input_label[18]="";   // commentaire de analog19 
+  input_label[19]="";   // commentaire de analog20 
+  input_label[20]="";   // commentaire de analog21 
+  input_label[21]="";   // commentaire de analog22 
+  input_label[22]="";   // commentaire de analog23 
+  input_label[23]="";   // commentaire de analog24 
+  input_label[24]="";   // commentaire de analog25 
+  input_label[25]="";   // commentaire de analog26 
+  input_label[26]="";   // commentaire de analog27 
+  input_label[27]="";   // commentaire de analog28 
+  input_label[28]="";   // commentaire de analog29 
+  input_label[29]="";   // commentaire de analog30 
+  input_label[30]="";   // commentaire de analog31 
+  input_label[31]="";   // commentaire de analog32 
+  input_label[32]="";   // commentaire de analog33 
+  input_label[33]="";   // commentaire de analog34 
+  input_label[34]="";   // commentaire de analog35 
+  input_label[35]="";   // commentaire de  analog36 
+  input_label[36]="";   // commentaire de  analog37 
+  input_label[37]="";   // commentaire de  analog38 
+  input_label[38]="";   // commentaire de  analog39 
+  input_label[39]="";   // commentaire de  analog40 
+  input_label[40]="";   // commentaire de  analog41 
+  input_label[41]="";   // commentaire de  analog42 
+  input_label[42]="";   // commentaire de  analog43 
+  input_label[43]="";   // commentaire de  analog44 
+  input_label[44]="";   // commentaire de  analog45 
+  input_label[45]="";   // commentaire de  analog46 
+  input_label[46]="";   // commentaire de  analog47 
+  input_label[47]="";   // commentaire de  analog48 
 
 
 
@@ -197,77 +208,79 @@ void setup()
 
 void loop()
 {
-  get_time(); // get time from RTC 
-  read_analogs(); // read analog from multiplexer
-  analogs_map();  // use your equationns, and map to convert resistance/voltage to physical value
-  megunolink_datalog(); // print to Megunolink for datalogging
-  megunolink_timeplot(); // print to Megunolink for timeplot
-  megunolink_table(); // print to Megunolink for table of value
-  lcd_print(); // display information on LCD
-  delay(1000); // delay 1 sec to get a correct looping
+  get_time(); // obtenir le temps à partir du module temps réel 
+  read_analogs(); // lecture des valeurs analogiques des trois multiplexeurs
+  analogs_map();  // utiliser cette fonction pour transfer la valeur numérique lue en valeur physique
+  megunolink_datalog(); // transmission vers Megunolink pour l'exporation de données
+  megunolink_timeplot(); //  transmission vers MegunLink pour l'affichage de graphique en temps réel
+  megunolink_table(); // transmission vers MegunLink pour l'affichage du tableau de valeur
+  lcd_print(); // affichage sur l'écran LCD
+  delay(1000); // pause du programme pendant 1 seconde. Ne pas descendre en dessous de 500ms.
 }
 
 
 void get_time(){
-  // Get time from RTC module, you don't need to change this function
+  // Obtenir le temps à partir du module temps réel, vous n'avez pas besoin de modifier cette fonction
   getDateDs1307(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year);
 }
 
 void read_analogs(){
-  // Read analog input for Multiplxer, you don't need to change this function
+  // Lecture des valeurs analogiques des trois multiplexeurs, vous n'avez pas besoin de modifier cette fonction
 
-  //This for loop is used to scroll through and store the 16 inputs on the FIRST multiplexer
+  // Cette boucle est utilisé pour scruter et sauvegarder les 16 entrées analogiques du premier multiplexeur
   for (int i=0; i<16; i++)
   {
-    //The following 4 commands set the correct logic for the control pins to select the desired input
-    //See the Arduino Bitwise AND Reference: http://www.arduino.cc/en/Reference/BitwiseAnd
-    //See the Aruino Bitshift Reference: http://www.arduino.cc/en/Reference/Bitshift
+    //Les 4 commandes suivantes, configurent les connecteurs controleurs pour pour sélectionner l'entrée souhaitée
+    //Regarder sur Arduino la référnce "Bitwise And" : http://www.arduino.cc/en/Reference/BitwiseAnd
+    //Regarder sur Aruino  la référence "Bitshift": http://www.arduino.cc/en/Reference/Bitshift
     digitalWrite(CONTROL0, (i&15)>>3); 
     digitalWrite(CONTROL1, (i&7)>>2);  
     digitalWrite(CONTROL2, (i&3)>>1);  
     digitalWrite(CONTROL3, (i&1));     
 
-    //Read and store the input value at a location in the array
+    // Lecture et sauvegarde de l'entrée analogique dans la matrice
     analog_input[i] = analogRead(0);
   }
 
-  //This for loop is used to scroll through the SECOND multiplexer
+  // Cette boucle est utilisé pour scruter et sauvegarder les 16 entrées analogiques du second multiplexeur
   for (int i=16; i<32; i++)
   {
     digitalWrite(CONTROL0, (i&15)>>3); 
     digitalWrite(CONTROL1, (i&7)>>2);  
     digitalWrite(CONTROL2, (i&3)>>1);  
     digitalWrite(CONTROL3, (i&1));     
+
+    // Lecture et sauvegarde de l'entrée analogique dans la matrice
     analog_input[i] = analogRead(1);
   }
 
-  //This for loop is used to scroll through the THIRD multiplexer
+  // Cette boucle est utilisé pour scruter et sauvegarder les 16 entrées analogiques du troisième multiplexeur
   for (int i=32; i<48; i++)
   {
     digitalWrite(CONTROL0, (i&15)>>3); 
     digitalWrite(CONTROL1, (i&7)>>2);  
     digitalWrite(CONTROL2, (i&3)>>1);  
-    digitalWrite(CONTROL3, (i&1));     
+    digitalWrite(CONTROL3, (i&1));    
+
+    // Lecture et sauvegarde de l'entrée analogique dans la matrice 
     analog_input[i] = analogRead(2);
   }    
 }
 
 void analogs_map(){
-  // Use this function to convert reading value to physical value
+  // Utilisez cette fonction pour convertir les valeurs numériques lues en valeur phsique
 
-  // Voltage conversion, convert all analogs inputs from [0;1023] numeric to [0;24.5]V
+  // Conversion en tension, convertie toutes les voies de [0;1023] à [0;30]V
   for (int i=0; i<48; i++){
-    analog_mapped[i]= float_map(analog_input[i], 0, 1023, 0, 24.5); 
+    analog_mapped[i]= float_map(analog_input[i], 0, 1023, 0, 30); 
   }
 
-  /* 
-   Use this code to get resistance value 
-   if you use thermistance for photosensor, 
-   temperature etc... This code convert 
-   mesured voltage to resistance value.
+  /*    
+   Utilisez ce code pour obtenir une valeur de résistance,
+   si vous utiliser une thermistance ou un capteur photo-sensible etc...
+   Ce code converti la tension en valeur de résistance.
    
-   float resistor_value;
-   float resistor_value = ((-4.9*(analog_mapped[i] -5))/(analog_mapped[i] ))*1000;
+   float resistor_value = ((-6*(analog_mapped[i] -5))/(analog_mapped[i] ))*1000;
    */
 
 
@@ -276,8 +289,11 @@ void analogs_map(){
    using TMP36 sensor, to convert mesured 
    voltage to temperature in °C
    
-   float temperature_c;
-   temperature_c = ( analog_mapped[i]*1000 - 500) / 10 
+   Utilisez ce code si vous utiliser un capteur de température TMP36,
+   pour convertir la tension mesurée en T(°C)
+   
+   
+   float temperature_c = ( analog_mapped[i]*1000 - 500) / 10 ;
    */
 
 
@@ -286,7 +302,7 @@ void analogs_map(){
 
 
 void megunolink_datalog(){
-  // Send values in message format to MegunoLink, to export value in *.txt format (to change to *.csv format)
+  // Envoie les "messages" vers MegunoLink,pour exporter les fichiers en format *.txt (pour etre converti au format *.csv)
 
   Serial.print("{MESSAGE|data|");
   Serial.print(hour, DEC);
@@ -306,27 +322,27 @@ void megunolink_datalog(){
 }
 
 void megunolink_timeplot(){
-  // Send values to MegunoLink to plot 
+  // Envoie les valeurs vers MegunoLink pour tracer les graphiques en temps réel
 
-    for (int i=0; i<48; i++){
+  for (int i=0; i<48; i++){
     Serial.print("{TIMEPLOT:");
-    Serial.print("Analog"); // channel name
-    Serial.print(i+1);        // channel number
+    Serial.print("Analog"); // nom du canal
+    Serial.print(i+1);        // numéro du canal
     Serial.print("|data|");
     Serial.print(input_unit[i]);
     Serial.print(":");
-    Serial.print("k_n");    // graphique configuration
+    Serial.print("k_n");    //  configuration du graphique
     Serial.print("|T|");
-    Serial.print(analog_mapped[i],3);  // data value
+    Serial.print(analog_mapped[i],3);  // valeur du canal
     Serial.println("}");
   }
 }
 
 
 void megunolink_table(){  
-  // Send values to MegunoLink to get table
+  // Envoie les valeurs vers MegunoLink pour le tableau synthétisant les données
 
-    for (int i=0; i<48; i++){
+  for (int i=0; i<48; i++){
     Serial.print("{TABLE");
     Serial.print("|SET|");
     Serial.print("Analog");
@@ -343,7 +359,7 @@ void megunolink_table(){
 }
 
 void lcd_print(){
-  // Display values on LCD
+  // Affichage sur l'écran LCD
 
   slcd.clear();
   slcd.setCursor(0,0);
@@ -822,13 +838,14 @@ void lcd_print(){
   }
 }
 
+//
 
 byte decToBcd(byte val)
 {
   return ( (val/10*16) + (val%10) );
 }
 
-// Convert binary coded decimal to normal decimal numbers
+// Converti le code binaire en nombre décimale
 byte bcdToDec(byte val)
 {
   return ( (val/16*10) + (val%16) );
@@ -857,7 +874,7 @@ byte year)  // 0-99
   Wire.endTransmission();
 }
 
-// Gets the date and time from the ds1307
+// Obtenir la date et l'heure à partir du ds1307
 void getDateDs1307(
 byte *second,
 byte *minute,
@@ -888,9 +905,10 @@ byte *year)
 void SLCDprintFloat(double number, uint8_t digits) 
 
 /* 
- Serial LCD don't support float display, 
- use this function if you want display flaot
- SLCDprintFloat(float_value,units) 
+ 
+ Serial LCD ne supporte pas l'affichage des flottantes,
+ utilisez cette fonction si vous souhaitez tout de meme en afficher
+ SLCDprintFloat(valeur_flottante,nombre de chiffre après la virgule)
  */
 
 { 
@@ -935,6 +953,12 @@ float float_map(float x, float in_min, float in_max, float out_min, float out_ma
    */
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
+
+
+
+
+
+
 
 
 
