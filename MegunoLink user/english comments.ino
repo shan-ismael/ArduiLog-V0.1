@@ -1,7 +1,25 @@
 /* 
- Arduino datalog writen by Shanmugathas Vigneswaran-Ismael
- Work with MegunLink
- Source code adapted for AFPA-TIFI, for the testing platforme "PAC".
+ ArduiLog v.01 http://rc-lab.fr
+ MegunoLink users code - with english comments
+ 
+ Short link : http://wp.me/p2z2tt-7u
+ http://rc-lab.fr/arduilog-v-01-appareil-dacquisition-48-voies-analogiques
+ 
+ Shanmugathas Vigneswara-Ismaël.
+ 
+ */
+ 
+ 
+ /*
+ Thanks to MuxShield : http://mayhewlabs.com/arduino-mux-shield
+ for multiplexer code.
+ 
+ Thanks to Maurice Ribble 4-17-2008
+ http://www.glacialwanderer.com/hobbyrobotics
+ for DS1307 RTC code.
+ 
+ Thanks to Edouard Chalouhb : http://www.edouard-chalhoub.com/
+ to provide me a lab to test ArduiLog v0.1
  */
 
 
@@ -28,26 +46,9 @@ char* input_unit[48]; // Your analog input unit configuration
 char* input_label[48]; // Your analog input label/comment
 float analog_mapped[48]; // Use equations to convert raw analog input to physical value
 
-
-// NTC Thermistance "resistance" to "Temerature (K)" conversation constants
-float a1 = 3.354016E-03;
-//float b1 = 2.569850E-04;
-float b1 = 2.744032E-04; 
-//float c1 = 2.620131E-06;
-float c1 = 3.666944E-06;
-//float d1 = 6.383091E-08;
-float d1 = 1.375492E-07;
-
 // Store time and date value from RTC module
 byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
 
-/*
-Max voltage  R1  R2  Calculation R2/(R1 + R2)  value of resistorFactor
- 10           1K  1K      1(1 + 1)                     511
- 15           2K  1K      1(2 + 1)                     341
- 20           3K  1K      1(3 + 1)                     255
- 30     4K (3.9K) 1K      1(4 + 1)                     170
- */
 
 void setup()
 {
@@ -88,29 +89,29 @@ void setup()
 
 
   // Set analogs inputs units  Megunolink and LCD display (Pa,°C,V,mA,A ....)
-  input_unit[0]="C";   // analog1 unit
-  input_unit[1]="C";   // analog2 unit
-  input_unit[2]="C";   // analog3 unit
-  input_unit[3]="C";   // analog4 unit
-  input_unit[4]="C";   // analog5 unit
-  input_unit[5]="C";   // analog6 unit
-  input_unit[6]="C";   // analog7 unit
-  input_unit[7]="C";   // analog8 unit
-  input_unit[8]="C";   // analog9 unit
-  input_unit[9]="C";   // analog10 unit
-  input_unit[10]="C";   // analog11 unit   
-  input_unit[11]="C";   // analog12 unit
-  input_unit[12]="C";   // analog13 unit
-  input_unit[13]="C";   // analog14 unit
-  input_unit[14]="C";   // analog15 unit
-  input_unit[15]="C";   // analog16 unit
-  input_unit[16]="C";   // analog17 unit
-  input_unit[17]="C";   // analog18 unit
-  input_unit[18]="Bar";   // analog19 unit
-  input_unit[19]="Bar";   // analog20 unit
-  input_unit[20]="Bar";   // analog21 unit
-  input_unit[21]="C";   // analog22 unit
-  input_unit[22]="C";   // analog23 unit
+  input_unit[0]="";   // analog1 unit
+  input_unit[1]="";   // analog2 unit
+  input_unit[2]="";   // analog3 unit
+  input_unit[3]="";   // analog4 unit
+  input_unit[4]="";   // analog5 unit
+  input_unit[5]="";   // analog6 unit
+  input_unit[6]="";   // analog7 unit
+  input_unit[7]="";   // analog8 unit
+  input_unit[8]="";   // analog9 unit
+  input_unit[9]="";   // analog10 unit
+  input_unit[10]="";   // analog11 unit   
+  input_unit[11]="";   // analog12 unit
+  input_unit[12]="";   // analog13 unit
+  input_unit[13]="";   // analog14 unit
+  input_unit[14]="";   // analog15 unit
+  input_unit[15]="";   // analog16 unit
+  input_unit[16]="";   // analog17 unit
+  input_unit[17]="";   // analog18 unit
+  input_unit[18]="";   // analog19 unit
+  input_unit[19]="";   // analog20 unit
+  input_unit[20]="";   // analog21 unit
+  input_unit[21]="";   // analog22 unit
+  input_unit[22]="";   // analog23 unit
   input_unit[23]="";   // analog24 unit
   input_unit[24]="";   // analog25 unit
   input_unit[25]="";   // analog26 unit
@@ -138,29 +139,29 @@ void setup()
   input_unit[47]="";   // analog48 unit
 
   // Configure analogs labels for Megunolink (Cooling room 1, Motor 2, Testing something 8 ...)
-  input_label[0]="Aspiration compresseur";   // analog1 label
-  input_label[1]="Refoulement compresseur";   // analog2 label
-  input_label[2]="Entree condenseur (ff)";   // analog3 label
-  input_label[3]="Sortie condenseur (ff)";   // analog4 label
-  input_label[4]="voie non utilise";   // analog5 label
-  input_label[5]="Entree detendeur";   // analog6 label
-  input_label[6]="Sortie detendeur";   // analog7 label
-  input_label[7]="Sortie evaporateur (ff)";   // analog8 label
-  input_label[8]="Amont PM";   // analog9 label
-  input_label[9]="Entree pompe 2";   // analog10 label
-  input_label[10]="Entree evaporateur (eau)";   // analog11 label   
-  input_label[11]="Sortie evaporateur (eau)";   // analog12 label
-  input_label[12]="voie non utilise";   // analog13 label
-  input_label[13]="Entree condenseur (eau)";   // analog14 label
-  input_label[14]="Sortie condenseur (eau)";   // analog15 label
-  input_label[15]="Entree pompe 1";   // analog16 label
-  input_label[16]="Entree resistance apport";   // analog17 label
-  input_label[17]="Sortie resistance apport";   // analog18 label
-  input_label[18]="Pression d'evaporation";   // analog19 label
-  input_label[19]="Pression d'aspiration";   // analog20 label
-  input_label[20]="Pression de condensation";   // analog21 label
-  input_label[21]="Temperature d'evaporation";   // analog22 label
-  input_label[22]="Temperature de condensation";   // analog23 label
+  input_label[0]="";   // analog1 label
+  input_label[1]="";   // analog2 label
+  input_label[2]="";   // analog3 label
+  input_label[3]="";   // analog4 label
+  input_label[4]="";   // analog5 label
+  input_label[5]="";   // analog6 label
+  input_label[6]="";   // analog7 label
+  input_label[7]="";   // analog8 label
+  input_label[8]="";   // analog9 label
+  input_label[9]="";   // analog10 label
+  input_label[10]="";   // analog11 label   
+  input_label[11]="";   // analog12 label
+  input_label[12]="";   // analog13 label
+  input_label[13]="";   // analog14 label
+  input_label[14]="";   // analog15 label
+  input_label[15]="";   // analog16 label
+  input_label[16]="";   // analog17 label
+  input_label[17]="";   // analog18 label
+  input_label[18]=" ";   // analog19 label
+  input_label[19]="";   // analog20 label
+  input_label[20]="";   // analog21 label
+  input_label[21]="";   // analog22 label
+  input_label[22]="";   // analog23 label
   input_label[23]="";   // analog24 label
   input_label[24]="";   // analog25 label
   input_label[25]="";   // analog26 label
@@ -259,38 +260,25 @@ void analogs_map(){
     analog_mapped[i]= float_map(analog_input[i], 0, 1023, 0, 24.5); 
   }
 
-  // Voltage to resistance conversion
-  for (int i=0; i<18; i++){
-    analog_mapped[i]= ((-4.9*(analog_mapped[i] -5))/(analog_mapped[i] ));
-    analog_mapped[i]*=1000; 
-  }
-
-  // Resistance to temperature conversion
-  for (int i=0; i<18; i++){
-    analog_mapped[i] = ((1)/(a1+(b1+(c1+d1*log(((analog_mapped[i])/(1000))))*log(((analog_mapped[i])/(1000))))*log(((analog_mapped[i])/(1000)))));
-    analog_mapped[i] -= 273.15;
-  }
-
-  analog_mapped[0] -= 2;
-  analog_mapped[1] -= 3;
+  /* 
+   Use this code to get resistance value 
+   if you use thermistance for photosensor, 
+   temperature etc... This code convert 
+   mesured voltage to resistance value.
+   
+   float resistor_value;
+   float resistor_value = ((-4.9*(analog_mapped[i] -5))/(analog_mapped[i] ))*1000;
+   */
 
 
-
-  // Convert pressure voltage to Bar
-  for (int i=18; i<21; i++){
-    analog_mapped[i]= 4.1916*analog_mapped[i]-2.0036;
-  }
-
-  // Convert evaporating pressure to evaporating temperature
-  analog_mapped[21] = 88.24* pow(analog_mapped[18],0.2416) - 114.5;
-  
-  // Convert condensing pressure to condensing temperature
-  analog_mapped[22] = 88.24* pow(analog_mapped[20],0.2416) - 114.5;
-
-
-  // Not used analog input
-  analog_mapped[4]=0;
-  analog_mapped[12]=0;
+  /* 
+   Use this code if you are 
+   using TMP36 sensor, to convert mesured 
+   voltage to temperature in °C
+   
+   float temperature_c;
+   temperature_c = ( analog_mapped[i]*1000 - 500) / 10 
+   */
 
 
 
@@ -298,6 +286,7 @@ void analogs_map(){
 
 
 void megunolink_datalog(){
+  // Send values in message format to MegunoLink, to export value in *.txt format (to change to *.csv format)
 
   Serial.print("{MESSAGE|data|");
   Serial.print(hour, DEC);
@@ -317,8 +306,9 @@ void megunolink_datalog(){
 }
 
 void megunolink_timeplot(){
+  // Send values to MegunoLink to plot 
 
-  for (int i=0; i<48; i++){
+    for (int i=0; i<48; i++){
     Serial.print("{TIMEPLOT:");
     Serial.print("Analog"); // channel name
     Serial.print(i+1);        // channel number
@@ -333,8 +323,10 @@ void megunolink_timeplot(){
 }
 
 
-void megunolink_table(){
-  for (int i=0; i<48; i++){
+void megunolink_table(){  
+  // Send values to MegunoLink to get table
+
+    for (int i=0; i<48; i++){
     Serial.print("{TABLE");
     Serial.print("|SET|");
     Serial.print("Analog");
@@ -351,6 +343,7 @@ void megunolink_table(){
 }
 
 void lcd_print(){
+  // Display values on LCD
 
   slcd.clear();
   slcd.setCursor(0,0);
@@ -848,7 +841,8 @@ byte hour,          // 1-23
 byte dayOfWeek,     // 1-7
 byte dayOfMonth,    // 1-28/29/30/31
 byte month,         // 1-12
-byte year)          // 0-99
+byte year)  // 0-99
+
 {
   Wire.beginTransmission(DS1307_I2C_ADDRESS);
   Wire.write(0);
@@ -892,6 +886,13 @@ byte *year)
 
 
 void SLCDprintFloat(double number, uint8_t digits) 
+
+/* 
+ Serial LCD don't support float display, 
+ use this function if you want display flaot
+ SLCDprintFloat(float_value,units) 
+ */
+
 { 
   // Handle negative numbers
   if (number < 0.0)
@@ -928,5 +929,16 @@ void SLCDprintFloat(double number, uint8_t digits)
 
 float float_map(float x, float in_min, float in_max, float out_min, float out_max)
 {
+  /* 
+   Use this function if you want map values, x = input reading value
+   x1 -> x2 >>> y1 -> y2
+   */
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
+
+
+
+
+
+
+
