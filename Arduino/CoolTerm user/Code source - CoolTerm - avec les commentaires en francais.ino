@@ -76,8 +76,8 @@ void setup()
   pinMode(CONTROL3, OUTPUT);
 
   /* 
-   Utiliser les valeurs ci-dessous vous voulez configurer le module temps réel.
-   Une fois configuré, laisser cette partie du code en commentaire
+   Utilisez les valeurs ci-dessous si vous voulez configurer le module temps réel.
+   Une fois configuré, laissez cette partie du code en commentaire
    second = 40;
    minute = 54;
    hour = 14;
