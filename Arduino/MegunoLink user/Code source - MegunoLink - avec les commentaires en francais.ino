@@ -58,7 +58,7 @@ byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
 
 void setup()
 {
-  //Ouvreture du port série à 500000 bps
+  //Ouverture du port série à 500000 bps
   Serial.begin(500000);
 
   //Ouverture de la série LCD
@@ -210,8 +210,8 @@ void loop()
 {
   get_time(); // obtenir le temps à partir du module temps réel 
   read_analogs(); // lecture des valeurs analogiques des trois multiplexeurs
-  analogs_map();  // utiliser cette fonction pour transfer la valeur numérique lue en valeur physique
-  megunolink_datalog(); // transmission vers Megunolink pour l'exporation de données
+  analogs_map();  // utiliser cette fonction pour transfert la valeur numérique lue en valeur physique
+  megunolink_datalog(); // transmission vers Megunolink pour l'exportation de données
   megunolink_timeplot(); //  transmission vers MegunLink pour l'affichage de graphique en temps réel
   megunolink_table(); // transmission vers MegunLink pour l'affichage du tableau de valeur
   lcd_print(); // affichage sur l'écran LCD
@@ -231,8 +231,8 @@ void read_analogs(){
   for (int i=0; i<16; i++)
   {
     //Les 4 commandes suivantes, configurent les connecteurs controleurs pour pour sélectionner l'entrée souhaitée
-    //Regarder sur Arduino la référnce "Bitwise And" : http://www.arduino.cc/en/Reference/BitwiseAnd
-    //Regarder sur Aruino  la référence "Bitshift": http://www.arduino.cc/en/Reference/Bitshift
+    //Regarder sur Arduino la référence "Bitwise And" : http://www.arduino.cc/en/Reference/BitwiseAnd
+    //Regarder sur Arduino  la référence "Bitshift": http://www.arduino.cc/en/Reference/Bitshift
     digitalWrite(CONTROL0, (i&15)>>3); 
     digitalWrite(CONTROL1, (i&7)>>2);  
     digitalWrite(CONTROL2, (i&3)>>1);  
@@ -268,12 +268,13 @@ void read_analogs(){
 }
 
 void analogs_map(){
-  // Utilisez cette fonction pour convertir les valeurs numériques lues en valeur phsique
+  // Utilisez cette fonction pour convertir les valeurs numériques lues en valeur physique
 
   // Conversion en tension, convertie toutes les voies de [0;1023] à [0;30]V
   for (int i=0; i<48; i++){
     analog_mapped[i]= float_map(analog_input[i], 0, 1023, 0, 30); 
   }
+
 
   /*    
    Utilisez ce code pour obtenir une valeur de résistance,
@@ -284,15 +285,26 @@ void analogs_map(){
    */
 
 
-  /*    
-   Utilisez ce code si vous utiliser un capteur de température TMP36,
+  /* 
+   Utilisez ce code si vous utilisez un capteur de température TMP36,
    pour convertir la tension mesurée en T(°C)
    
    float temperature_c = ( analog_mapped[i]*1000 - 500) / 10 ;
    */
 
 
-
+  /*
+   Utilisez ce code si vous utilisez un capteur fonctionnant en 4-20mA
+   N'oubliez d'ajouter une résistance de shunt >250 ohm et d'indiquer la valeur ci-dessous
+   
+   int R_shunt = ;
+   float range_min = ; // regarder le datasheet du fabricant de sonde
+   float range_max = ; // regarder le datasheet du fabricant de sonde
+   float u_min = R_shunt*4/1000 ;
+   float u_max = R_shunt*20/1000;
+   
+   analog_mapped[i] = float_map(analog_mapped[i], u_min, u_max, range_min, range_max);
+   */
 }
 
 
@@ -948,6 +960,7 @@ float float_map(float x, float in_min, float in_max, float out_min, float out_ma
    */
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
+
 
 
 

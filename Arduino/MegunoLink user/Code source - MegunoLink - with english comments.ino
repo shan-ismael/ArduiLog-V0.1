@@ -8,7 +8,7 @@
  Tutorial { Short link : http://wp.me/p2z2tt-7u
  http://rc-lab.fr/arduilog-v-01-appareil-dacquisition-48-voies-analogiques
  
- code written by Shanmugathas Vigneswara-Ismaël.
+ code written by Shanmugathas Vigneswaran-Ismaël.
  */
 
 
@@ -47,7 +47,7 @@ int an_disp_count = 0; // Integer used to count LCD display
 char* input_unit[48]; // Your analog input unit configuration for MegunoLink and LCD screen
 char* input_label[48]; // Your analog input label/comment for MegunoLink
 
-// Only this these value are transfered to MegunoLink and LCD screen
+// Only this these value are transferred to MegunoLink and LCD screen
 float analog_mapped[48]; // Use equations to convert raw analog input to physical value
 
 // Store time and date value from RTC module
@@ -94,7 +94,7 @@ void setup()
 
   /*
    Set analogs inputs units  Megunolink and LCD display (Pa,°C,V,mA,A ....)
-   PLEASE DON'T USE SPECIAL CARACTERS LIKE  (°, %, $ ù etc....)
+   PLEASE DON'T USE SPECIAL CHARACTERS LIKE  (°, %, $ ù etc....)
    */
   input_unit[0]="";   // analog1 unit
   input_unit[1]="";   // analog2 unit
@@ -147,7 +147,7 @@ void setup()
 
   /* 
    Configure analogs labels for Megunolink (Cooling room 1, Motor 2, Testing something 8 ...)
-   PLEASE DON'T USE SPECIAL CARACTERS LIKE  (°, %, $ ù etc....) 
+   PLEASE DON'T USE SPECIAL CHARACTERS LIKE  (°, %, $ ù etc....) 
    */
   input_label[0]="";   // analog1 label
   input_label[1]="";   // analog2 label
@@ -209,9 +209,9 @@ void loop()
 {
   get_time(); // get time from RTC 
   read_analogs(); // read analog from multiplexer
-  analogs_map();  // use your equationns, and map to convert resistance/voltage to physical value
-  megunolink_datalog(); // print to Megunolink for datalogging
-  megunolink_timeplot(); // print to Megunolink for timeplot
+  analogs_map();  // use your equations, and map to convert resistance/voltage to physical value
+  megunolink_datalog(); // print to Megunolink for data-logging
+  megunolink_timeplot(); // print to Megunolink for time-plot
   megunolink_table(); // print to Megunolink for table of value
   lcd_print(); // display information on LCD
   delay(1000); // delay 1 sec to get a correct looping
@@ -224,7 +224,7 @@ void get_time(){
 }
 
 void read_analogs(){
-  // Read analog input for Multiplxer, you don't need to change this function
+  // Read analog input for Multiplexer, you don't need to change this function
 
   //This for loop is used to scroll through and store the 16 inputs on the FIRST multiplexer
   for (int i=0; i<16; i++)
@@ -270,11 +270,11 @@ void analogs_map(){
     analog_mapped[i]= float_map(analog_input[i], 0, 1023, 0, 30); 
   }
 
-  /* 
+   /* 
    Use this code to get resistance value 
    if you use thermistance or photosensor, 
    temperature etc... This code convert 
-   mesured voltage to resistance value.
+   measured voltage to resistance value.
    
    float resistor_value = ((-6*(analog_mapped[i] -5))/(analog_mapped[i] ))*1000;
    */
@@ -282,10 +282,23 @@ void analogs_map(){
 
   /* 
    Use this code if you are 
-   using TMP36 sensor, to convert mesured 
+   using TMP36 sensor, to convert measured 
    voltage to temperature in °C
    
    float temperature_c = ( analog_mapped[i]*1000 - 500) / 10 ;
+   */
+   
+     /*
+   Use this code if you using 4-20mA sensor
+   Don't forget to put a shunt resistor > 250 ohm and report this value below
+   
+   int R_shunt = ;
+   float range_min = ; // see sensor manufacturer data sheet
+   float range_max = ; // see sensor manufacturer data sheet
+   float u_min = R_shunt*4/1000 ;
+   float u_max = R_shunt*20/1000;
+   
+   analog_mapped[i] = float_map(analog_mapped[i], u_min, u_max, range_min, range_max);
    */
 
 
@@ -897,7 +910,7 @@ void SLCDprintFloat(double number, uint8_t digits)
 
 /* 
  Serial LCD don't support float display, 
- use this function if you want display flaot
+ use this function if you want display float
  SLCDprintFloat(float_value,units) 
  */
 

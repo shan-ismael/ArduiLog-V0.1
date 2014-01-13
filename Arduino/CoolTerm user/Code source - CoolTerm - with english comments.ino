@@ -8,7 +8,7 @@
  Tutorial { Short link : http://wp.me/p2z2tt-7u
  http://rc-lab.fr/arduilog-v-01-appareil-dacquisition-48-voies-analogiques
  
- code written by Shanmugathas Vigneswara-Ismaël.
+ code written by Shanmugathas Vigneswaran-Ismaël.
  */
 
 
@@ -30,13 +30,13 @@
 #include <SoftwareSerial.h>
 #include <math.h>
 
-// Use software serial to prind on LCD display
+// Use software serial to print on LCD display
 SerialLCD slcd(11,12);
 
 // Define real time clock adresse
 #define DS1307_I2C_ADDRESS 0x68
 
-//Define mutliplexer digital control pins
+//Define multiplexer digital control pins
 #define CONTROL0 5    
 #define CONTROL1 4
 #define CONTROL2 3
@@ -46,7 +46,7 @@ int analog_input[48]; // Raw analog input of multiplexer (0 to 1023)
 int an_disp_count = 0; // Integer used to count LCD display
 char* input_unit[48]; // Your analog input unit configuration for LCD screen
 
-// Only this these value are transfered to CoolTerm and LCD screen
+// Only this these value are transferred to CoolTerm and LCD screen
 float analog_mapped[48]; // Use equations to convert raw analog input to physical value
 
 // Store time and date value from RTC module
@@ -153,7 +153,7 @@ void loop()
 {
   get_time(); // get time from RTC 
   read_analogs(); // read analog from multiplexer
-  analogs_map();  // use your equationns, and map to convert resistance/voltage to physical value
+  analogs_map();  // use your equations, and map to convert resistance/voltage to physical value
   datalog(); // print to CoolTerm for datalogging
   lcd_print(); // display information on LCD
   delay(1000); // delay 1 sec to get a correct looping
@@ -166,7 +166,7 @@ void get_time(){
 }
 
 void read_analogs(){
-  // Read analog input for Multiplxer, you don't need to change this function
+  // Read analog input for Multiplexer, you don't need to change this function
 
   //This for loop is used to scroll through and store the 16 inputs on the FIRST multiplexer
   for (int i=0; i<16; i++)
@@ -216,21 +216,32 @@ void analogs_map(){
    Use this code to get resistance value 
    if you use thermistance or photosensor, 
    temperature etc... This code convert 
-   mesured voltage to resistance value.
+   measured voltage to resistance value.
    
-   float resistor_value = ((-6*(analog_mapped[i] -5))/(analog_mapped[i] ))*1000;
+   analog_mapped[i] = ((-6*(analog_mapped[i] -5))/(analog_mapped[i] ))*1000;
    */
 
 
   /* 
    Use this code if you are 
-   using TMP36 sensor, to convert mesured 
+   using TMP36 sensor, to convert measured 
    voltage to temperature in °C
    
-   float temperature_c = ( analog_mapped[i]*1000 - 500) / 10 ;
+   analog_mapped[i] = ( analog_mapped[i]*1000 - 500) / 10 ;
    */
-
-
+   
+     /*
+   Use this code if you using 4-20mA sensor
+   Don't forget to put a shunt resistor > 250 ohm and report this value below
+   
+   int R_shunt = ;
+   float range_min = ; // see sensor manufacturer data sheet
+   float range_max = ; // see sensor manufacturer data sheet
+   float u_min = R_shunt*4/1000 ;
+   float u_max = R_shunt*20/1000;
+   
+   analog_mapped[i] = float_map(analog_mapped[i], u_min, u_max, range_min, range_max);
+   */
 
 }
 
@@ -803,7 +814,7 @@ void SLCDprintFloat(double number, uint8_t digits)
 
 /* 
  Serial LCD don't support float display, 
- use this function if you want display flaot
+ use this function if you want display float
  SLCDprintFloat(float_value,units) 
  */
 
