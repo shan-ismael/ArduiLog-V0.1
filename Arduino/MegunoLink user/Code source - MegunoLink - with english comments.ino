@@ -276,7 +276,7 @@ void analogs_map(){
    temperature etc... This code convert 
    measured voltage to resistance value.
    
-   float resistor_value = ((-6*(analog_mapped[i] -5))/(analog_mapped[i] ))*1000;
+   analog_mapped[i] = ((-6*(analog_mapped[i] -5))/(analog_mapped[i] ))*1000;
    */
 
 
@@ -285,7 +285,7 @@ void analogs_map(){
    using TMP36 sensor, to convert measured 
    voltage to temperature in °C
    
-   float temperature_c = ( analog_mapped[i]*1000 - 500) / 10 ;
+   analog_mapped[i] = ( analog_mapped[i]*1000 - 500) / 10 ;
    */
    
      /*

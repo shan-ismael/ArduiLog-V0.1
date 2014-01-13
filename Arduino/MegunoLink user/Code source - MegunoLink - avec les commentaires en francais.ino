@@ -281,7 +281,7 @@ void analogs_map(){
    si vous utiliser une thermistance ou un capteur photo-sensible etc...
    Ce code converti la tension en valeur de résistance.
    
-   float resistor_value = ((-6*(analog_mapped[i] -5))/(analog_mapped[i] ))*1000;
+   analog_mapped[i] = ((-6*(analog_mapped[i] -5))/(analog_mapped[i] ))*1000;
    */
 
 
@@ -289,7 +289,7 @@ void analogs_map(){
    Utilisez ce code si vous utilisez un capteur de température TMP36,
    pour convertir la tension mesurée en T(°C)
    
-   float temperature_c = ( analog_mapped[i]*1000 - 500) / 10 ;
+   analog_mapped[i] = ( analog_mapped[i]*1000 - 500) / 10 ;
    */
 
 
