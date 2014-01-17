@@ -104,7 +104,7 @@
         <auto-connect>false</auto-connect>
         <port-name>
           <type>Fixed</type>
-          <port>COM4</port>
+          <port>COM5</port>
         </port-name>
         <baud-rate>500000</baud-rate>
         <data-bits>8</data-bits>
@@ -116,9 +116,9 @@
   </serial-sources>
   <windows>
     <window>
-      <position left="-8" top="-8" width="1456" height="876" state="Maximized" />
-      <DockPanel FormatVersion="1.0" DockLeftPortion="0.25" DockRightPortion="220" DockTopPortion="0.25" DockBottomPortion="0.25" ActiveDocumentPane="1" ActivePane="1">
-        <Contents Count="6">
+      <position left="-8" top="-8" width="1452" height="876" state="Normal" />
+      <DockPanel FormatVersion="1.0" DockLeftPortion="0.25" DockRightPortion="220" DockTopPortion="0.25" DockBottomPortion="0.25" ActiveDocumentPane="3" ActivePane="0">
+        <Contents Count="7">
           <Content ID="0" PersistString="VisualizerToolbox" AutoHidePortion="220" IsHidden="False" IsFloat="False" />
           <Content ID="1" PersistString="DataTable" AutoHidePortion="0.25" IsHidden="False" IsFloat="False">
             <ShowSourceInTitle>true</ShowSourceInTitle>
@@ -164,7 +164,7 @@
             <TabTitle>Time Plot</TabTitle>
             <reporting-enabled>false</reporting-enabled>
             <show-summary>true</show-summary>
-            <active-channels>Analog1</active-channels>
+            <active-channels />
             <reporting>
               <width>640</width>
               <height>480</height>
@@ -185,12 +185,12 @@
               </font>
             </title>
             <x-axis>
-              <minimum>41636.858888888732</minimum>
-              <maximum>41636.859756944235</maximum>
-              <major-step>15</major-step>
-              <minor-step>5</minor-step>
-              <major-unit>Second</major-unit>
-              <minor-unit>Second</minor-unit>
+              <minimum>0</minimum>
+              <maximum>1.2</maximum>
+              <major-step>0.2</major-step>
+              <minor-step>0.05</minor-step>
+              <major-unit>Day</major-unit>
+              <minor-unit>Day</minor-unit>
               <minimum-auto>true</minimum-auto>
               <maximum-auto>true</maximum-auto>
               <major-step-auto>true</major-step-auto>
@@ -206,10 +206,81 @@
               </font>
             </x-axis>
             <y-axis>
-              <minimum>13</minimum>
-              <maximum>23</maximum>
-              <major-step>1</major-step>
-              <minor-step>0.2</minor-step>
+              <minimum>0</minimum>
+              <maximum>1.2</maximum>
+              <major-step>0.2</major-step>
+              <minor-step>0.05</minor-step>
+              <major-unit>Day</major-unit>
+              <minor-unit>Day</minor-unit>
+              <minimum-auto>true</minimum-auto>
+              <maximum-auto>true</maximum-auto>
+              <major-step-auto>true</major-step-auto>
+              <minor-step-auto>true</minor-step-auto>
+              <text>y</text>
+              <visible>true</visible>
+              <font>
+                <color>-16777216</color>
+                <family>Microsoft Sans Serif</family>
+                <bold>true</bold>
+                <italic>false</italic>
+                <size>14</size>
+              </font>
+            </y-axis>
+            <run>false</run>
+          </Content>
+          <Content ID="6" PersistString="mlpChart" AutoHidePortion="0.25" IsHidden="False" IsFloat="False">
+            <ShowSourceInTitle>true</ShowSourceInTitle>
+            <ShowPortInTitle>false</ShowPortInTitle>
+            <SourceId>1</SourceId>
+            <TabTitle>Time Plot</TabTitle>
+            <reporting-enabled>false</reporting-enabled>
+            <show-summary>true</show-summary>
+            <active-channels />
+            <reporting>
+              <width>640</width>
+              <height>480</height>
+              <dpi>96</dpi>
+              <anti-alias>true</anti-alias>
+              <filename-pattern>Graph {Seq}</filename-pattern>
+              <format>b96b3caf-0728-11d3-9d7b-0000f81ef32e</format>
+            </reporting>
+            <title>
+              <text>Chart</text>
+              <visible>true</visible>
+              <font>
+                <color>-16777216</color>
+                <family>Microsoft Sans Serif</family>
+                <bold>true</bold>
+                <italic>false</italic>
+                <size>16</size>
+              </font>
+            </title>
+            <x-axis>
+              <minimum>0</minimum>
+              <maximum>1.2</maximum>
+              <major-step>0.2</major-step>
+              <minor-step>0.05</minor-step>
+              <major-unit>Day</major-unit>
+              <minor-unit>Day</minor-unit>
+              <minimum-auto>true</minimum-auto>
+              <maximum-auto>true</maximum-auto>
+              <major-step-auto>true</major-step-auto>
+              <minor-step-auto>true</minor-step-auto>
+              <text>Time</text>
+              <visible>true</visible>
+              <font>
+                <color>-16777216</color>
+                <family>Microsoft Sans Serif</family>
+                <bold>true</bold>
+                <italic>false</italic>
+                <size>14</size>
+              </font>
+            </x-axis>
+            <y-axis>
+              <minimum>0</minimum>
+              <maximum>1.2</maximum>
+              <major-step>0.2</major-step>
+              <minor-step>0.05</minor-step>
               <major-unit>Day</major-unit>
               <minor-unit>Day</minor-unit>
               <minimum-auto>true</minimum-auto>
@@ -245,9 +316,10 @@
               <Content ID="0" RefID="1" />
             </Contents>
           </Pane>
-          <Pane ID="3" DockState="Document" ActiveContent="5">
-            <Contents Count="1">
-              <Content ID="0" RefID="5" />
+          <Pane ID="3" DockState="Document" ActiveContent="6">
+            <Contents Count="2">
+              <Content ID="0" RefID="6" />
+              <Content ID="1" RefID="5" />
             </Contents>
           </Pane>
           <Pane ID="4" DockState="Document" ActiveContent="3">
